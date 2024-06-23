@@ -35,6 +35,7 @@
 
 <script>
 import Axios from 'axios';
+import Swal from 'sweetalert2';
 
 export default {
     name: 'NavBar',
@@ -69,6 +70,25 @@ export default {
                     this.temp = Math.floor(this.weather.main.temp) - 273;
                     this.status = this.weather.weather[0].main;
                 })
+                .catch(error => {
+                    console.error(error.message)
+                    Swal.fire({
+                        icon: 'error',
+                        title: "oops! We can't find this city",
+                        toast: true,
+                        position: 'top-end',
+                        timer: 2000,
+                        timerProgressBar: true,
+                        showConfirmButton: false,
+                        customClass: {
+                            timerProgressBar: 'toast-pbar',
+                            title: 'toast-title',
+                        }
+                    });
+                })
+
+
+
 
         },
         getWeatherDate: function () {
@@ -117,7 +137,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style >
 .container {
     width: 100%;
     height: 100vh;
@@ -194,5 +214,11 @@ main {
         color: #fff;
         letter-spacing: 1px;
     }
+}
+.toast-pbar {
+    background-color: #ED2939;
+}
+.toast-title {
+    font-family: Arial, Helvetica, sans-serif;
 }
 </style>
