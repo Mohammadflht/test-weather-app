@@ -63,33 +63,37 @@ export default {
             //         this.status = this.weather.weather[0].main;
             //     })
 
-            Axios.get(`${this.api}/weather?q=${this.query}&appid=${this.api_key}`)
-                .then(response => {
-                    this.weather = response.data;
-                    this.country = this.weather.sys.country;
-                    this.temp = Math.floor(this.weather.main.temp) - 273;
-                    this.status = this.weather.weather[0].main;
+
+            if (this.query == '') {
+                toast.fire({
+                    icon: 'warning',
+                    title: `please type a city name`,
+                    customClass: {
+                        timerProgressBar: 'toast-warning-pbar',
+                        title: 'toast-title'
+                    }
                 })
-                .catch(error => {
-                    console.error(error.message)
-                    Swal.fire({
-                        icon: 'error',
-                        title: "oops! We can't find this city",
-                        toast: true,
-                        position: 'top-end',
-                        timer: 2000,
-                        timerProgressBar: true,
-                        showConfirmButton: false,
-                        customClass: {
-                            timerProgressBar: 'toast-pbar',
-                            title: 'toast-title',
-                        }
-                    });
-                })
-
-
-
-
+            } else {
+                Axios.get(`${this.api}/weather?q=${this.query}&appid=${this.api_key}`)
+                    .then(response => {
+                        this.weather = response.data;
+                        this.country = this.weather.sys.country;
+                        this.temp = Math.floor(this.weather.main.temp) - 273;
+                        this.status = this.weather.weather[0].main;
+                    })
+                    .catch(error => {
+                        console.error(error.message);
+                        toast.fire({
+                            icon: 'error',
+                            title: `Oops! We can't find ${this.query}`,
+                            customClass: {
+                                timerProgressBar: 'toast-error-pbar',
+                                title: 'toast-title',
+                            }
+                        });
+                        console.clear();
+                    })
+            }
         },
         getWeatherDate: function () {
             let d = new Date();
@@ -135,16 +139,28 @@ export default {
         console.log(typeof this.weather);
     },
 }
+
+// Define custom SweetAlert as toast
+const toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    timer: 2000,
+    timerProgressBar: true,
+    showConfirmButton: false,
+    customClass: {
+        title: 'toast-title',
+    }
+})
 </script>
 
-<style >
+<style>
 .container {
     width: 100%;
     height: 100vh;
     background-image: url('../assets/weather-background.jpg');
     background-repeat: no-repeat;
     background-size: cover;
-    filter: brightness(70%);
+    filter: brightness(90%);
     font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -163,6 +179,7 @@ main {
     & input {
         width: 90%;
         height: 50%;
+        border: none;
         border-radius: 16px 4px;
         padding-left: 12px;
         font-size: 18px;
@@ -215,9 +232,14 @@ main {
         letter-spacing: 1px;
     }
 }
-.toast-pbar {
+
+.toast-error-pbar {
     background-color: #ED2939;
 }
+.toast-warning-pbar {
+    background-color: #cbae18;
+}
+
 .toast-title {
     font-family: Arial, Helvetica, sans-serif;
 }

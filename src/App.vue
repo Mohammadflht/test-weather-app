@@ -1,18 +1,18 @@
 <template>
   <div class="box">
-    <NavBar />
+    <Weather />
     <!-- <router-view></router-view> -->
   </div>
 </template>
 
 <script>
 import eventBus from './services/eventBus';
-import NavBar from './components/NavBar.vue';
+import Weather from './components/WeatherSection.vue';
 
 export default {
   name: 'App',
   components: {
-    NavBar,
+    Weather,
   },
   data() {
     return {
