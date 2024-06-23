@@ -1,28 +1,46 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="box">
+    <NavBar />
+    <!-- <router-view></router-view> -->
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import eventBus from './services/eventBus';
+import NavBar from './components/NavBar.vue';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
-  }
+    NavBar,
+  },
+  data() {
+    return {
+
+    }
+  },
+  methods: {
+    deleteRecord: function (fruitId) {
+      let fruitIndex = this.fruits.findIndex(fruit => fruit.id == fruitId);
+      this.fruits.splice(fruitIndex, 1);
+
+      // console.log(fruitIndex);
+    },
+    bananaToKale() {
+      for (const fruit of this.fruits) {
+        if (fruit.name == "Bananas") {
+          fruit.name = "Kale";
+        }
+      }
+    },
+  },
+  created: function () {
+    eventBus.$on('changeBTK', () => {
+      this.bananaToKale();
+    });
+  },
 }
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style scoped>
 </style>
