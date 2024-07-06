@@ -1,8 +1,10 @@
 <template>
-  <div class="box">
-    <Weather />
-    <!-- <router-view></router-view> -->
-  </div>
+  <v-app>
+    <div class="box">
+      <Weather />
+      <!-- <router-view></router-view> -->
+    </div>
+  </v-app>
 </template>
 
 <script>

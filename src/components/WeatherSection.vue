@@ -1,8 +1,40 @@
 <template>
-    <div class="container">
+    <v-container fluid class="page-container">
+        <v-row>
+            <v-col cols="12">
+                <v-text-field
+                label="Search city..."
+                filled
+                shaped
+                class="mx-16"
+                style="font-size: 18px; opacity: 80%;"
+                color="primary"
+                background-color="#efefef"
+                dense
+                v-model="query"
+                @keyup.enter="fetchWeather()"
+                ></v-text-field>
+            </v-col>
+        </v-row>
+        <v-row v-if="weather.name">
+            <v-col
+            cols="12"
+            class="weather-location">
+                <h2>{{ weather.name }}, {{ country }}</h2>
+                <p><i>{{ getWeatherDate() }}</i></p>
+            </v-col>
+            <v-col
+            cols="12"
+            class="weather-date-time">
+                <h1>{{ temp }} C</h1>
+                <p>{{ status }}</p>
+            </v-col>
+        </v-row>
+    </v-container>
+    <!-- 
         <main>
             <div class="search-box">
-                <input type="text" placeholder="Search" v-model="query" @keyup.enter="fetchWeather()">
+                <input type="text" placeholder="Search city..." v-model="query" @keyup.enter="fetchWeather()">
             </div>
 
             <div v-if="weather.name" class="weather-location">
@@ -14,7 +46,7 @@
                 <p>{{ status }}</p>
             </div>
         </main>
-    </div>
+    -->
 
     <!-- <div class="box">
         <div class="container">
@@ -153,8 +185,8 @@ const toast = Swal.mixin({
 })
 </script>
 
-<style>
-.container {
+<style >
+.page-container {
     width: 100%;
     height: 100vh;
     background-image: url('../assets/weather-background.jpg');
