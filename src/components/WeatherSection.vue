@@ -16,7 +16,59 @@
                 ></v-text-field>
             </v-col>
         </v-row>
+
         <v-row v-if="weather.name">
+            <v-card
+            class="mx-auto px-2"
+            width="400"
+            shaped>
+                <v-list-item
+                two-line
+                class="mt-3">
+                    <v-list-item-content>
+                        <v-list-item-title class="text-h5">
+                            {{ weather.name }}, {{ country }}
+                        </v-list-item-title>
+                        <v-list-item-subtitle>{{ getWeatherDate() }}, {{ status }}</v-list-item-subtitle>
+                    </v-list-item-content>
+                </v-list-item>
+                <v-card-text class="mb-6">
+                    <v-row class="d-flex align-center">
+                        <v-col
+                        class="text-h2"
+                        cols="6">
+                            {{ temp }}&deg;C
+                        </v-col>
+                        <v-col
+                            cols="6"
+                            class="pr-12">
+                            <v-img
+                                :src="getStatusImage"
+                                alt="weather-status-image"
+                                width="90"
+                                height="90"
+                                class="float-end"></v-img>
+                        </v-col>
+                    </v-row>
+                </v-card-text>
+                <v-list-item>
+                    <v-list-item-icon>
+                        <v-icon>mdi-send</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-subtitle>{{ windSpeed }}km/h</v-list-item-subtitle>
+                </v-list-item>
+
+                <v-list-item>
+                    <v-list-item-icon>
+                        <v-icon>mdi-cloud-percent</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-subtitle>{{ humidity }}%</v-list-item-subtitle>
+                </v-list-item>
+            </v-card>
+        </v-row>
+
+
+        <!-- <v-row v-if="weather.name">
             <v-col
             cols="12"
             class="weather-location">
@@ -29,7 +81,8 @@
                 <h1>{{ temp }} C</h1>
                 <p>{{ status }}</p>
             </v-col>
-        </v-row>
+        </v-row> -->
+    
     </v-container>
     <!-- 
         <main>
@@ -68,6 +121,11 @@
 <script>
 import Axios from 'axios';
 import Swal from 'sweetalert2';
+import clearImage from '../assets/sunny.png'
+import cloudsImage from '../assets/cloudy.png'
+import rainImage from '../assets/rainy.png'
+import snowImage from '../assets/snowy.png'
+import mistImage from '../assets/mist.png'
 
 export default {
     name: 'NavBar',
@@ -80,6 +138,8 @@ export default {
             country: '',
             temp: '',
             status: '',
+            windSpeed: '',
+            humidity: '',
         }
     },
     methods: {
@@ -108,10 +168,13 @@ export default {
             } else {
                 Axios.get(`${this.api}/weather?q=${this.query}&appid=${this.api_key}`)
                     .then(response => {
+                        console.log(response.data);
                         this.weather = response.data;
                         this.country = this.weather.sys.country;
                         this.temp = Math.floor(this.weather.main.temp) - 273;
                         this.status = this.weather.weather[0].main;
+                        this.windSpeed = Math.floor((this.weather.wind.speed) * 3.6);
+                        this.humidity = this.weather.main.humidity;
                     })
                     .catch(error => {
                         console.error(error.message);
@@ -164,8 +227,35 @@ export default {
 
             // console.log(date);
         },
+        // statusImage: function() {
+        //     switch () {
+        //         case :
+                    
+        //             break;
+            
+        //         default:
+        //             break;
+        //     }
+        // }
     },
     computed: {
+        getStatusImage: function() {
+            // console.log("current status", this.status);
+            switch (this.status) {
+                case 'Clear':
+                    return clearImage;
+                case 'Clouds':
+                    return cloudsImage;
+                case 'Rain':
+                    return rainImage;
+                case 'Snow':
+                    return snowImage;
+                case 'Mist':
+                    return mistImage;
+                default:
+                    return clearImage;
+        }
+        },
     },
     created() {
         console.log(typeof this.weather);
